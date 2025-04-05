@@ -1,5 +1,5 @@
 package cmd;
-//Roster of Souls v1.0 by ViveTheModder
+//Roster of Souls v1.1 by ViveTheModder
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -135,6 +135,31 @@ public class Main
 		}
 		return charaNames;
 	}
+	public static void deleteSlot(RandomAccessFile bin, int deleteIdx) throws IOException
+	{
+		bin.seek(0);
+		int currNumSlots = LittleEndian.getInt(bin.readInt());
+		currNumSlots--;
+		bin.seek(0);
+		bin.writeInt(LittleEndian.getInt(currNumSlots));
+		
+		int binSize = (int)bin.length(), pos;
+		for (int i=0; i<deleteIdx+2; i++)
+		{
+			pos = 4+(i*173);
+			bin.seek(pos);
+			if (i==deleteIdx+1) //deleteIdx+1 is the panel next to the deleted character panel
+			{
+				byte[] restOfFile = new byte[binSize-pos];
+				bin.read(restOfFile);
+				bin.seek(pos-173); //go back to the deleted character panel
+				bin.write(restOfFile);
+				bin.setLength(binSize-173);
+			}
+		}
+		System.out.println("Slot "+deleteIdx+" has been deleted!");
+		bin.close();
+	}
 	public static void insertSlot(RandomAccessFile bin, String charaId, int insertIdx) throws IOException
 	{
 		byte[] newSlot = getCharaPanelContents(charaId);
@@ -194,7 +219,7 @@ public class Main
 		int charaCnt=0, rowIdx=0;
 		for (int i=0; i<charaNames.length; i++)
 		{
-			System.out.print(charaNames[i]+", ");
+			System.out.print("["+i+"] "+charaNames[i]+", ");
 			charaCnt++;
 			if (charaCnt==rowPanels[rowIdx])
 			{
@@ -211,7 +236,7 @@ public class Main
 		File[] binFiles = new File[2];
 		RandomAccessFile[] bins = new RandomAccessFile[2];
 		String[] fileNames = {"CharaSelect","Character_Select"};
-		String[] options = {"Exit","Print Roster","Insert New Slot","Overwrite Slot"};
+		String[] options = {"Exit","Print Roster","Insert New Slot","Overwrite Slot","Remove Slot"};
 		Scanner sc = new Scanner(System.in);
 		
 		for (int i=0; i<2; i++)
@@ -228,9 +253,9 @@ public class Main
 						binFiles[i]=tmp;
 						bins[i]=new RandomAccessFile(binFiles[i],"rw");
 					}
-					else System.out.println("Path does NOT point to the exact "+fileNames[i]+".bin file. Try again!");
+					else System.out.println("Path does NOT point to the exact "+fileNames[i]+".bin file. Try again!\n");
 				}
-				else if (tmp.isDirectory()) System.out.println("Path does NOT point to a file, but to a directory. Try again!");
+				else if (tmp.isDirectory()) System.out.println("Path does NOT point to a file, but to a directory. Try again!\n");
 			}
 		}
 		while (true)
@@ -240,7 +265,7 @@ public class Main
 			for (int i=0; i<options.length; i++) System.out.println(i+". "+options[i]);
 			String input = sc.nextLine();
 			if (input.matches("[0-"+(options.length-1)+"]+")) option = Integer.parseInt(input);
-			else System.out.println("Invalid option number or format. Try again!");
+			else System.out.println("Invalid option number or format. Try again!\n");
 			
 			if (option==0 || numSlots>38) 
 			{
@@ -262,16 +287,19 @@ public class Main
 					charaName=null;
 					while (insertIdx==-1)
 					{
-						System.out.println("Specify an index (starting from zero) to insert a slot.\nOtherwise, specify N for no index (slot is inserted at the end).");
+						System.out.println("Specify an index (starting from zero) to insert a slot.\n"
+						+ "Otherwise, specify N for no index (slot is inserted at the end).\n"
+						+ "DISCLAIMER: Inserting slots for non-playable characters will lead\n"
+						+ "to a softlock, unless their character selects animations are edited.");
 						String idxOption = sc.nextLine();
 						if (idxOption.matches("\\d+"))
 						{
 							int tmp = Integer.parseInt(idxOption);
 							if (tmp<=37) insertIdx=tmp;
-							else System.out.println("Index out of range (exceeds 37). Try again!");
+							else System.out.println("Index out of range (exceeds 37). Try again!\n");
 						}
 						else if (idxOption.toLowerCase().equals("n")) insertIdx=37;
-						else System.out.println("Invalid option (not an index or the letter N). Try again!");
+						else System.out.println("Invalid option (not an index or the letter N). Try again!\n");
 					}
 					while (charaName==null)
 					{
@@ -291,7 +319,7 @@ public class Main
 								insertSlot(bins[0],newCharaId,insertIdx);
 								charaName=name;
 							}
-							else System.out.println("Invalid character name. Try again!");
+							else System.out.println("Invalid character name. Try again!\n");
 						}
 					}
 					break;
@@ -300,15 +328,17 @@ public class Main
 					charaName=null;
 					while (overwriteIdx==-1)
 					{
-						System.out.println("Specify an index (starting from zero) to represent the overwritten slot.");
+						System.out.println("Specify an index (starting from zero) to represent the overwritten slot.\n"
+						+ "DISCLAIMER: Overwriting slots to use non-playable characters will lead\n"
+						+ "to a softlock, unless their character select animations are edited.");
 						String idxOption = sc.nextLine();
 						if (idxOption.matches("\\d+"))
 						{
 							int tmp = Integer.parseInt(idxOption);
 							if (tmp<numSlots) overwriteIdx=tmp;
-							else System.out.println("Index out of range (is/exceeds the number of slots). Try again!");
+							else System.out.println("Index out of range (is/exceeds the number of slots). Try again!\n");
 						}
-						else System.out.println("Invalid option (not an index). Try again!");
+						else System.out.println("Invalid option (not an index). Try again!\n");
 					}
 					while (charaName==null)
 					{
@@ -328,9 +358,26 @@ public class Main
 								overwriteSlot(bins[0],newCharaId,overwriteIdx);
 								charaName=name;
 							}
-							else System.out.println("Invalid character name. Try again!");
+							else System.out.println("Invalid character name. Try again!\n");
 						}
 					}
+					break;
+				case 4:
+					int deleteIdx=-1;
+					while (deleteIdx==-1)
+					{
+						System.out.println("Specify an index (starting from zero) to represent the deleted slot:");
+						String idxOption = sc.nextLine();
+						if (idxOption.matches("\\d+"))
+						{
+							int tmp = Integer.parseInt(idxOption);
+							if (tmp<numSlots) deleteIdx=tmp;
+							else System.out.println("Index out of range (is/exceeds the number of slots). Try again!\n");
+						}
+						else System.out.println("Invalid option (not an index). Try again!\n");
+					}
+					deleteSlot(bins[0],deleteIdx);
+					break;
 			}
 		}		
 	}
