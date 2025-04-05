@@ -1,15 +1,26 @@
 # roster-of-souls
-A command-line modding tool made for editing the character roster of BLEACH Rebirth of Souls.
+A command-line modding tool made for **editing the character roster** of [BLEACH Rebirth of Souls](https://store.steampowered.com/app/1689620/BLEACH_Rebirth_of_Souls/).
+
+Special Thanks to [Portable Productions](https://www.youtube.com/@PortableProductions) and [Kurayami Saidai](https://www.youtube.com/@KurayamiSaidai) for their **much needed research**!
 
 # Usage/Demonstration
+To use the tool, navigate to the folder where it's stored. Then, go to the Address Bar and type ``cmd``.
+
 ![image](https://github.com/user-attachments/assets/79d22020-7651-4299-8be6-aafa7d613163)
 
-![image](https://github.com/user-attachments/assets/7a352b5d-107f-408a-848b-c767eec7a32b)
+After that, type the following and press ENTER: ``java -jar roster-of-souls.jar``
 
-![image](https://github.com/user-attachments/assets/a86f0cee-28b3-44f1-be2a-25f014deb284)
+![image](https://github.com/user-attachments/assets/290c44eb-8799-4c2e-83ea-4316b3b2b316)
 
-![image](https://github.com/user-attachments/assets/22b84c4e-8c55-4b1d-8279-0ccd49a851cf)
+## Tool Features
+### Printing the Character Roster
+![image](https://github.com/user-attachments/assets/9a921864-43c5-4c96-a9f3-928c1ccc1b05)
 
-![image](https://github.com/user-attachments/assets/bca4262d-b594-4212-b224-e10286219b26)
+### Inserting a Character Panel
+![image](https://github.com/user-attachments/assets/a0bbbe1e-fec8-4312-abec-6137c73234e1)
 
-![image](https://github.com/user-attachments/assets/7c93e4ac-0308-456d-a593-9bae4ce4c1e0)
+### Overwriting a Character Panel
+![image](https://github.com/user-attachments/assets/df70416f-9663-4601-ac13-d0a64e214fb0)
+
+### Removing a Character Panel
+![image](https://github.com/user-attachments/assets/49174172-ebe3-4d5f-b5f6-b660033aa380)
