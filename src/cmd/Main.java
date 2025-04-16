@@ -1,12 +1,11 @@
 package cmd;
-//Roster of Souls v1.2 by ViveTheModder
+//Roster of Souls v1.2.1 by ViveTheModder
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.net.URISyntaxException;
 import java.util.Scanner;
 
-//TODO: Add other options for chooseOptionsStage()
 public class Main 
 {	
 	public static void chooseOptionsChara(File[] binFiles, RandomAccessFile[] bins, Scanner sc, String[] options) throws IOException
@@ -138,6 +137,8 @@ public class Main
 	public static void chooseOptionsStage(File[] binFiles, RandomAccessFile[] bins, Scanner sc, String[] options) throws IOException
 	{
 		int option=0;
+		String disclaimer="DISCLAIMER: Inserting or overwriting stage panels will only overwrite their names.\n"
+		+ "On top of that, the changed stage panels will always point to [Hueco Mundo] Las Noches - Inside the Fifth Tower.\n";
 		while (true)
 		{
 			System.out.println("\nEnter a valid option number out of the following options:");
@@ -159,6 +160,7 @@ public class Main
 					Stage.printRoster(stageNames);
 					break;
 				case 2:
+					System.out.println(disclaimer);
 					int insertIdx=-1;
 					stageName=null;
 					while (insertIdx==-1)
@@ -198,6 +200,7 @@ public class Main
 					}
 					break;
 				case 3:
+					System.out.println(disclaimer);
 					int overwriteIdx=-1;
 					stageName=null;
 					while (overwriteIdx==-1)
@@ -269,6 +272,7 @@ public class Main
 			{
 				System.out.println("Enter a valid path to the "+fileNames[i]+".bin file:");
 				String path = sc.nextLine();
+				if (path.contains("\"")) path=path.replace("\"", ""); //remove quotes from path in case there are any
 				File tmp = new File(path);
 				if (tmp.isFile()) 
 				{

@@ -6,8 +6,6 @@ import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-//TODO: import other methods from Chara class
-
 public class Stage 
 {
 	public static int numSlots;
@@ -16,7 +14,7 @@ public class Stage
 
 	private static byte[] getStagePanelContents(String stageId) throws IOException
 	{
-		byte[] stageIdBytes = new byte[20];
+		byte[] emptyBytes = new byte[4], stageIdBytes = new byte[20];
 		byte[] stagePanelContents = new byte[68], intersection = new byte[68], placeholder = new byte[68];
 		int pos=startOfStageInfo, sectionSize=(68*numSlots)+pos;
 		File charaSelectVanilla = new File("./bak/CharaSelectVanilla.bin");
@@ -30,7 +28,11 @@ public class Stage
 			char[] currStageIdAsCharArray = currStageId.toCharArray();
 			if (currStageIdAsCharArray.length==20) currStageId = currStageId.substring(0,19);
 				
-			if (currStageId.equals(stageId)) System.arraycopy(placeholder, 0, stagePanelContents, 0, 68);
+			if (currStageId.equals(stageId)) 
+			{
+				System.arraycopy(placeholder, 0, stagePanelContents, 0, 68);
+				System.arraycopy(emptyBytes, 0, stagePanelContents, 64, 4);
+			}
 			else if (currStageId.equals("battle_stage_name_1")) System.arraycopy(placeholder, 0, intersection, 0, 68);
 			raf.seek(pos);
 		}
@@ -39,6 +41,7 @@ public class Stage
 		{
 			System.arraycopy(stageId.getBytes(), 0, intersection, 32, stageId.getBytes().length);
 			System.arraycopy(intersection, 0, stagePanelContents, 0, 68);
+			System.arraycopy(emptyBytes, 0, stagePanelContents, 64, 4);
 		}
 		raf.close();
 		return stagePanelContents;
@@ -216,11 +219,7 @@ public class Stage
 		{
 			pos+=(i*68);
 			bin.seek(pos);
-			if (i==overwriteIdx) 
-			{
-				System.out.println(pos);
-				bin.write(newSlot);
-			}
+			if (i==overwriteIdx) bin.write(newSlot);
 		}
 		System.out.println("Slot "+overwriteIdx+" has been overwritten!");
 		bin.close();
