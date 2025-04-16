@@ -1,5 +1,5 @@
 # roster-of-souls
-A command-line modding tool made for **editing the character roster** of [BLEACH Rebirth of Souls](https://store.steampowered.com/app/1689620/BLEACH_Rebirth_of_Souls/).
+A command-line modding tool made for **editing the character (and stage) roster** of [BLEACH Rebirth of Souls](https://store.steampowered.com/app/1689620/BLEACH_Rebirth_of_Souls/).
 
 Special Thanks to [Portable Productions](https://www.youtube.com/@PortableProductions) and [Kurayami Saidai](https://www.youtube.com/@KurayamiSaidai) for their **much needed research**!
 
@@ -24,3 +24,18 @@ After that, type the following and press ENTER: ``java -jar roster-of-souls.jar`
 
 ### Removing a Character Panel
 ![image](https://github.com/user-attachments/assets/49174172-ebe3-4d5f-b5f6-b660033aa380)
+
+### Printing the Stage Roster
+![image](https://github.com/user-attachments/assets/eb1988ec-a327-4508-b93f-2e5fddc4861e)
+
+![image](https://github.com/user-attachments/assets/ab7c76b4-1a56-4a5f-abd6-520a3ea8c3b7)
+
+### Inserting a Stage Panel (at the wrong place)
+
+![image](https://github.com/user-attachments/assets/e3c934dc-73d6-4bc8-9ca2-4b7d0a3d10ca)
+
+### Overwriting a Stage Panel (well, not the right one)
+![image](https://github.com/user-attachments/assets/19fa68ee-7896-4bc9-b69f-afb360c17848)
+
+### Removing a Stage Panel
+![image](https://github.com/user-attachments/assets/7a89ebc9-104b-44b8-9c8f-8d7cbc6b593e)
